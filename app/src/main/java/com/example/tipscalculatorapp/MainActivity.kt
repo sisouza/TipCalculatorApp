@@ -26,7 +26,12 @@ class MainActivity : AppCompatActivity() {
 
     fun calculateTip() {
         val stringInTextField = binding.edtServiceCoast.text
-        val cost = stringInTextField.toDouble()
+        val cost = stringInTextField.toDoubleOrNull()
+
+        if (cost == null) {
+            binding.tvTipResult.text = ""
+            return
+        }
 
         val selectedId = binding.rgTipOptions.checkedRadioButtonId
 
@@ -44,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         val formattedTip = NumberFormat.getCurrencyInstance().format(tip)
-        binding.tvTipResult.text = getString(R.string.tip_amount, formattedTip)
+        binding.tvTipResult.text = getString(R.string.tip_amount, formatted
 
     }
 }
