@@ -9,7 +9,7 @@ class MainActivity : AppCompatActivity() {
     /*declares a top-level variable in the class for the binding object
     that  will be used across multiple methods in MainActivity class
      */
-    lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,32 +24,34 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun calculateTip() {
-        val stringInTextField = binding.edtServiceCoast.text
+    private fun calculateTip() {
+        val stringInTextField = binding.edtServiceCoast.text.toString()
         val cost = stringInTextField.toDoubleOrNull()
 
-        if (cost == null) {
-            binding.tvTipResult.text = ""
+        if (cost == null || cost == 0.0) {
+            displayTip(0.0)
             return
         }
 
-        val selectedId = binding.rgTipOptions.checkedRadioButtonId
-
-        val tipPercentage = when (selectedId) {
+        val tipPercentage = when (binding.rgTipOptions.checkedRadioButtonId) {
             R.id.rbOptionOne -> 0.20
             R.id.optionTwo -> 0.18
             else -> 0.15
         }
 
-        var tip = tipPercentage * cost
-        val roundUp = binding.roundUpSwitch.isChecked
+        var tip = tipPercentage.times(cost)
 
+        val roundUp = binding.roundUpSwitch.isChecked
         if (roundUp) {
             tip = kotlin.math.ceil(tip)
         }
 
-        val formattedTip = NumberFormat.getCurrencyInstance().format(tip)
-        binding.tvTipResult.text = getString(R.string.tip_amount, formatted
+        displayTip(tip)
 
+    }
+
+    private fun displayTip(tip: Double) {
+        val formattedTip = NumberFormat.getCurrencyInstance().format(0.0)
+        binding.tvTipResult.text = getString(R.string.tip_amount, formattedTip)
     }
 }
